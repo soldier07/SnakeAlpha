@@ -2,6 +2,7 @@ package com.moonstub.training.app.snakealpha.Screens;
 
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.view.Window;
 
 import com.moonstub.training.app.snakealpha.GameAssets;
 import com.moonstub.training.app.snakealpha.GameState;
@@ -24,7 +25,9 @@ public class BoardScreen extends GameScreen {
     boolean firstStart = true;
     boolean forward = true;
     String gameMessage = "";
+    String scoreMessage = "";
     float elapsedTime = 0.0f;
+    private List<Section> levelSection;
 
 
     public BoardScreen(GameActivity game, ArrayList<Section> levelSection) {
@@ -52,6 +55,7 @@ public class BoardScreen extends GameScreen {
 
     @Override
     public void update(float delta) {
+
         elapsedTime += delta;
         if (elapsedTime > GameSettings.SPEED) {
             elapsedTime = 0;
@@ -81,7 +85,10 @@ public class BoardScreen extends GameScreen {
 
     private void updateGameOver(ArrayList<TouchEvent.TouchEvents> events) {
         gameMessage = "Game Over Man Tap to Try Again";
+        scoreMessage = "You were able to collect "+GameSettings.SCORE+ " apples.";
         if(events.size() > 0){
+            GameSettings.SCORE=0;
+            GameSettings.SPEED=12;
             //mGameState = GameState.INIT;
             init();
         }
@@ -111,6 +118,13 @@ public class BoardScreen extends GameScreen {
                 }
                 //Check Apple Collision
                 if(s.checkCollisionSelf(apple)){
+                    //TODO set title here.
+                    GameSettings.SCORE=GameSettings.SCORE+1;
+                    if(GameSettings.SCORE%2==0) {
+                        GameSettings.lvl++;
+                        lvlUp(GameSettings.lvl);
+                    }
+                    GameSettings.SPEED=GameSettings.SPEED-1;
                     dropApple();
                     addSnakeSection();
                 }
@@ -296,6 +310,7 @@ public class BoardScreen extends GameScreen {
         getPaint().setColor(Color.WHITE);
         getPaint().setTextSize(45.0f);
         g.drawString(gameMessage, 100, 100, getPaint());
+        g.drawString(scoreMessage, 100, 200, getPaint());
     }
 
     private void drawPaused(GameGraphics g) {
@@ -317,6 +332,29 @@ public class BoardScreen extends GameScreen {
     @Override
     public void dispose() {
 
+    }
+
+    public String getLvl(){
+        String ans="level_5_01.txt";
+        if(GameSettings.lvl==0) {
+            ans = "level_1_01.txt";
+        }
+        else if(GameSettings.lvl==1) {
+            ans = "level_2_01.txt";
+        }
+        else if(GameSettings.lvl==2) {
+            ans = "level_3_01.txt";
+        }
+        else if(GameSettings.lvl==3) {
+            ans = "level_4_01.txt";
+        }
+        return (ans);
+    }
+    public void lvlUp(int lvl){
+        LoadLevel loadLevel = new LoadLevel(getGameActivity().getGameIO());
+        loadLevel.loadFile(getLvl());
+        levelSection = loadLevel.parseString(loadLevel.stringLevel);
+        getGameActivity().setCurrentScreen(new BoardScreen(getGameActivity(), (ArrayList<Section>) levelSection));
     }
 
     @Override
