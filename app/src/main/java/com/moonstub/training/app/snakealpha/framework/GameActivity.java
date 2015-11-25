@@ -149,6 +149,10 @@ public abstract class GameActivity extends AppCompatActivity {
 
     }
 
+    public void setNewTitle(String nTitle){
+        setTitle(nTitle);
+    }
+
     public GameState getGameState(){
         return mGameState;
     }

@@ -43,7 +43,7 @@ public class MenuItem{//} extends View {
 
     public void touched(TouchEvent.TouchEvents event){
         if(checkCollision(event.x, event.y)){
-            setShowDefaultImage(event.type == TouchEvent.TouchEvents.TOUCH_UP || event.type == TouchEvent.TouchEvents.TOUCH_DRAGGED);
+            setShowDefaultImage(event.type == TouchEvent.TouchEvents.TOUCH_UP);
         }
     }
 

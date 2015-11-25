@@ -11,5 +11,7 @@ public class GameSettings {
 
     public static final int PORT_SCREEN_WIDTH = 800;
     public static final int PORT_SCREEN_HEIGHT = 1200;
-    public static final float SPEED = 12;
+    public static float SPEED = 12;
+    public static float SCORE = 0;
+    public static int lvl=0;
 }
